@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h2>My Policies</h2>
+<table><tr><th>Policy #</th><th>Type</th><th>Coverage</th><th>Valid</th></tr>
+{% for p in policies %}<tr><td>{{ p.policy_number }}</td><td>{{ p.policy_type }}</td>
+<td>{{ "{:,.2f}".format(p.coverage_amount) }}</td><td>{{ p.start_date }} → {{ p.end_date }}</td></tr>
+{% else %}<tr><td colspan="4">No policies.</td></tr>{% endfor %}</table></div>
+<div class="card"><h2>My Claims</h2>
+<a class="btn" href="{{ url_for('new_claim') }}">+ File New Claim</a>
+<table style="margin-top:14px"><tr><th>Claim #</th><th>Policy</th><th>Incident</th><th>Amount</th><th>Approved</th><th>Status</th><th></th></tr>
+{% for c in claims %}<tr><td>{{ c.claim_number }}</td><td>{{ c.policy_number }}</td><td>{{ c.incident_date }}</td>
+<td>{{ "{:,.2f}".format(c.claim_amount) }}</td><td>{{ "{:,.2f}".format(c.approved_amount) }}</td>
+<td><span class="badge {{ c.status }}">{{ c.status }}</span></td>
+<td><a href="{{ url_for('claim_detail', claim_id=c.id) }}">View</a></td></tr>
+{% else %}<tr><td colspan="7">No claims yet.</td></tr>{% endfor %}</table></div>
+{% endblock %}

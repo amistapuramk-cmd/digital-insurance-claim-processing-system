@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}
+<div class="card" style="max-width:520px;margin:auto"><h2>Create Policy</h2>
+<form method="post">
+<label>Customer</label>
+<select name="user_id">{% for c in customers %}<option value="{{ c.id }}">{{ c.full_name }} ({{ c.username }})</option>{% endfor %}</select>
+<label>Type</label>
+<select name="policy_type"><option>Health</option><option>Auto</option><option>Home</option><option>Life</option></select>
+<label>Coverage amount</label><input type="number" step="0.01" name="coverage_amount" required>
+<label>Start date</label><input type="date" name="start_date" required>
+<label>End date</label><input type="date" name="end_date" required>
+<button class="btn">Create</button>
+</form></div>{% endblock %}

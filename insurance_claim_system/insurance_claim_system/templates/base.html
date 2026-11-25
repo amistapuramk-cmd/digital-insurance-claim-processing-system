@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Insurance Claims{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+<nav>
+  <a class="brand" href="{{ url_for('index') }}">🛡️ Digital Claim Processing</a>
+  <div>
+  {% if session.user_id %}
+    <span>{{ session.name }} ({{ session.role }})</span>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    {% if session.role == 'customer' %}<a href="{{ url_for('new_claim') }}">New Claim</a>
+    {% else %}<a href="{{ url_for('new_policy') }}">New Policy</a>{% endif %}
+    <a href="{{ url_for('logout') }}">Logout</a>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a><a href="{{ url_for('register') }}">Register</a>
+  {% endif %}
+  </div>
+</nav>
+<main>
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, m in msgs %}<div class="flash {{ cat }}">{{ m }}</div>{% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main></body></html>

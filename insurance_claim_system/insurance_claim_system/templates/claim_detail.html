@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h2>Claim {{ claim.claim_number }}
+<span class="badge {{ claim.status }}">{{ claim.status }}</span></h2>
+<table>
+<tr><th>Customer</th><td>{{ claim.full_name }}</td></tr>
+<tr><th>Policy</th><td>{{ claim.policy_number }} ({{ claim.policy_type }}, cover {{ "{:,.2f}".format(claim.coverage_amount) }})</td></tr>
+<tr><th>Incident date</th><td>{{ claim.incident_date }}</td></tr>
+<tr><th>Claimed</th><td>{{ "{:,.2f}".format(claim.claim_amount) }}</td></tr>
+<tr><th>Approved</th><td>{{ "{:,.2f}".format(claim.approved_amount) }}</td></tr>
+<tr><th>Description</th><td>{{ claim.description }}</td></tr>
+{% if claim.flag_reason %}<tr><th>Flag</th><td class="flag">{{ claim.flag_reason }}</td></tr>{% endif %}
+{% if claim.document %}<tr><th>Document</th><td><a href="{{ url_for('uploaded_file', filename=claim.document) }}">Download</a></td></tr>{% endif %}
+<tr><th>Note</th><td>{{ claim.adjuster_note or '-' }}</td></tr>
+</table></div>
+
+{% if session.role == 'adjuster' and claim.status in ['Under Review','Submitted'] %}
+<div class="card"><h2>Adjuster Decision</h2>
+<form method="post" action="{{ url_for('decide', claim_id=claim.id) }}">
+<label>Approved amount (for approval)</label>
+<input type="number" step="0.01" name="approved_amount" value="{{ claim.claim_amount }}">
+<label>Note</label><textarea name="note" rows="3"></textarea>
+<button class="btn green" name="decision" value="approve">Approve</button>
+<button class="btn red" name="decision" value="reject">Reject</button>
+</form></div>{% endif %}
+
+<div class="card"><h2>History</h2>
+<table><tr><th>When</th><th>Status</th><th>Note</th></tr>
+{% for h in history %}<tr><td>{{ h.created_at }}</td><td>{{ h.status }}</td><td>{{ h.note }}</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

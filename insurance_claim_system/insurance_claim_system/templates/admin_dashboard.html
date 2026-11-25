@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block content %}
+<div class="stats">
+{% for s in ['Under Review','Approved','Rejected'] %}
+<div class="stat"><b>{{ stats.get(s,0) }}</b>{{ s }}</div>{% endfor %}
+</div>
+<div class="card"><h2>All Claims</h2>
+<table><tr><th>Claim #</th><th>Customer</th><th>Policy</th><th>Amount</th><th>Status</th><th>Flag</th><th></th></tr>
+{% for c in claims %}<tr><td>{{ c.claim_number }}</td><td>{{ c.full_name }}</td><td>{{ c.policy_number }}</td>
+<td>{{ "{:,.2f}".format(c.claim_amount) }}</td>
+<td><span class="badge {{ c.status }}">{{ c.status }}</span></td>
+<td class="flag">{{ '⚠' if c.flag_reason }}</td>
+<td><a href="{{ url_for('claim_detail', claim_id=c.id) }}">Open</a></td></tr>
+{% else %}<tr><td colspan="7">No claims.</td></tr>{% endfor %}</table></div>
+{% endblock %}
